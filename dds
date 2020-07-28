@@ -1,0 +1,52 @@
+#!/bin/sh
+
+exit_0()
+{
+  echo "Exiting..."
+  exit 0
+}
+
+check_if_su()
+{
+  if [ $(id -u) != 0 ]; then
+    echo "Please run with su privileges"
+    exit_0
+  fi
+}
+
+validate_file()
+{
+  FILE=$1
+  if [ -e "$FILE" ]; then
+    echo "File is valid" 
+  else
+    echo "Not a valid file"
+    exit_0
+  fi
+}
+
+echo "Welcome to dd-safe"
+echo "------------------"
+check_if_su
+read -p "Enter data source: " if
+validate_file $if
+read -p "Enter data destination: " of
+validate_file $of
+read -p "What block size do you want to use? (default: 64k, 128k, 1M): " bs
+
+case $bs in ""|" ")
+  bs="64k"
+  echo "No value provided. Setting default value: $bs";;
+*)
+  bs=$bs;;
+esac
+
+echo "Preparing to copy from source: $if to destination: $of with block size: $bs"
+read -p "Do you want to continue? (y/n) " confirm
+
+case $confirm in "y"|"Y")
+  echo "Beginning process..."
+  dd if="$if" of="$of" bs="$bs" conv=noerror,sync status=progress;; 
+*)
+  exit_0;;
+esac
