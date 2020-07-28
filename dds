@@ -37,20 +37,22 @@ validate_file "$of"
 printf 'What block size do you want to use? (default: 64k, 128k, 1M): '
 read -r bs
 
-case $bs in ""|" ")
-  bs="64k"
-  echo "No value provided. Setting default value: $bs";;
-*)
-  bs=$bs;;
+case $bs in
+  "" | " ")
+    bs="64k"
+    echo "No value provided. Setting default value: $bs";;
+  *)
+    bs=$bs;;
 esac
 
 echo "Preparing to copy from source: $if to destination: $of with block size: $bs"
 printf 'Do you want to continue? (y/n) '
 read -r confirm
 
-case $confirm in "y"|"Y")
-  echo "Beginning process..."
-  dd if="$if" of="$of" bs="$bs" conv=noerror,sync status=progress;; 
-*)
+case $confirm in
+  "y" | "Y")
+    echo "Beginning process..."
+    dd if="$if" of="$of" bs="$bs" conv=noerror,sync status=progress;; 
+  *)
   exit_0;;
 esac
