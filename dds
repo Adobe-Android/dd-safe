@@ -25,6 +25,16 @@ validate_file()
   fi
 }
 
+run_dd()
+{
+  case "$(uname -s)" in
+    Linux | FreeBSD | DragonFly)
+      dd if="$if" of="$of" bs="$bs" conv=noerror,sync status=progress;;
+    *)
+      dd if="$if" of="$of" bs="$bs" conv=noerror,sync;;
+  esac
+}
+
 echo "Welcome to dd-safe"
 echo "------------------"
 check_if_su
@@ -52,7 +62,7 @@ read -r confirm
 case $confirm in
   "y" | "Y")
     echo "Beginning process..."
-    dd if="$if" of="$of" bs="$bs" conv=noerror,sync status=progress;; 
+    run_dd;;
   *)
   exit_0;;
 esac
