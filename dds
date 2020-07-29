@@ -17,9 +17,7 @@ check_if_su()
 validate_file()
 {
   FILE=$1
-  if [ -e "$FILE" ]; then
-    echo "File is valid" 
-  else
+  if [ ! -e "$FILE" ]; then
     echo "Not a valid file"
     exit_0
   fi
@@ -28,6 +26,7 @@ validate_file()
 run_dd()
 {
   case "$(uname -s)" in
+  # Platforms known to support progress indicator
     Linux | FreeBSD | DragonFly)
       dd if="$if" of="$of" bs="$bs" conv=noerror,sync status=progress;;
     *)
