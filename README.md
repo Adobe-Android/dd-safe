@@ -7,21 +7,31 @@ Written in [shellcheck](https://www.shellcheck.net) compliant POSIX sh.
 * :penguin: Linux
 * :smiling_imp: FreeBSD
 * :dragon: DragonFly BSD
+* :blowfish: OpenBSD
+* :triangular_flag_on_post: NetBSD
 * :wine_glass: Windows via WSL (Windows subsystem for Linux)
 
 ### Coming soon...
 * :apple: macOS
-* :blowfish: OpenBSD
-* :triangular_flag_on_post: NetBSD
-* :sunny: Solaris
+* :sunny: Solaris/illumos
 
 ## How to run
 Download just the script and run
+
+via wget
 ```sh
 wget https://raw.githubusercontent.com/Adobe-Android/dd-safe/master/dds
 chmod +x dds
 ./dds
 ```
+
+via curl
+```sh
+curl -O https://raw.githubusercontent.com/Adobe-Android/dd-safe/master/dds
+chmod +x dds
+./dds
+```
+
 or download from git and run
 ```sh
 git clone https://github.com/Adobe-Android/dd-safe.git
