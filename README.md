@@ -9,11 +9,11 @@ Written in [shellcheck](https://www.shellcheck.net) compliant POSIX sh.
 * :dragon: DragonFly BSD
 * :blowfish: OpenBSD
 * :triangular_flag_on_post: NetBSD
+* :sunny: Solaris/illumos
 * :wine_glass: Windows via WSL (Windows subsystem for Linux)
 
 ### Coming soon...
 * :apple: macOS
-* :sunny: Solaris/illumos
 
 ## How to run
 Download just the script and run

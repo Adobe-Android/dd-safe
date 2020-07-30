@@ -23,14 +23,40 @@ validate_file()
   fi
 }
 
-run_dd()
+check_illumos()
+{
+  case "$(uname -o)" in
+    illumos)
+      # illumos distributions like OpenIndiana support this feature 
+      status_supported="true";;
+    *)
+      # Oracle Solaris 11.4 does not support this feature
+      status_supported="false"
+  esac
+}
+
+check_os()
 {
   case "$(uname -s)" in
-  # Platforms known to support progress indicator
+    # Platforms known to support the status progress indicator
     Linux | FreeBSD | DragonFly)
-      dd if="$if" of="$of" bs="$bs" conv=noerror,sync status=progress;;
+      status_supported="true";;
+    SunOS)
+      check_illumos;;
     *)
+      status_supported="false"
+  esac
+}
+
+run_dd()
+{
+  case $status_supported in
+    "true")
+      dd if="$if" of="$of" bs="$bs" conv=noerror,sync status=progress;;
+    "false")
       dd if="$if" of="$of" bs="$bs" conv=noerror,sync;;
+    *)
+      echo "Well... this is no good. Feel free to open an issue here: https://github.com/Adobe-Android/dd-safe/issues/new"
   esac
 }
 
@@ -61,7 +87,8 @@ read -r confirm
 case $confirm in
   "y" | "Y")
     echo "Beginning process..."
-    run_dd;;
+    check_os
+    run_dd $status_supported;;
   *)
   exit_0;;
 esac
