@@ -41,7 +41,11 @@ validate_file()
 check_drive_size()
 {
   FILE=$1
-  fdisk -l | grep Disk | grep "$FILE"
+  DRIVE_NAME=$(echo "$FILE" | cut -b 6-8)
+  FILE_SIZE=$(lsblk | grep "$DRIVE_NAME" | awk '/disk/ {print $4}')
+  if [ -n "$FILE_SIZE" ]; then
+    echo "Your drive at $1 is $FILE_SIZE"
+  fi
 }
 
 check_illumos()
