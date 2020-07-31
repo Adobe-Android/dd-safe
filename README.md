@@ -1,5 +1,5 @@
 # dd-safe
-:shell: A safer and easier way to use [dd(1)](https://www.freebsd.org/cgi/man.cgi?dd(1)).
+:shell: A safer and simpler way to use [dd(1)](https://www.freebsd.org/cgi/man.cgi?dd(1)).
 
 Written in [shellcheck](https://www.shellcheck.net) compliant POSIX sh.
 
