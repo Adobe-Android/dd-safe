@@ -10,10 +10,22 @@ Written in [shellcheck](https://www.shellcheck.net) compliant POSIX sh.
 * :blowfish: OpenBSD
 * :triangular_flag_on_post: NetBSD
 * :sunny: Solaris/illumos
+
+## Coming soon...
+* :apple: macOS
+
+## Unsupported
 * :wine_glass: Windows via WSL (Windows subsystem for Linux)
 
-### Coming soon...
-* :apple: macOS
+I really wanted this to work, but WSL isn't even able to enumerate drives with tools like lsblk and fdisk.
+Therefore, officially supporting it would be a mistake.
+
+```sh
+lsblk: failed to access sysfs directory: /sys/dev/block: No such file or directory
+```
+```sh
+fdisk: cannot open /proc/partitions: No such file or directory
+```
 
 ## How to - Download and run (without installation)
 
