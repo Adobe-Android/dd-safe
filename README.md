@@ -22,7 +22,6 @@ I really wanted this to work, but WSL isn't able to enumerate drives as expected
 lsblk
 ```
 
-:heavy_exclamation_mark:
 ```sh
 lsblk: failed to access sysfs directory: /sys/dev/block: No such file or directory
 ```
@@ -31,7 +30,6 @@ lsblk: failed to access sysfs directory: /sys/dev/block: No such file or directo
 fdisk -l
 ```
 
-:heavy_exclamation_mark:
 ```sh
 fdisk: cannot open /proc/partitions: No such file or directory
 ```
