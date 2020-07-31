@@ -39,7 +39,7 @@ chmod +x dds
 ./dds
 ```
 
-This program expects to run with sudo, doas, or as root because [dd(1)](https://www.freebsd.org/cgi/man.cgi?dd(1)) will often require root permissions to access devices.
+:warning: This program expects to run with sudo, doas, or as root because [dd(1)](https://www.freebsd.org/cgi/man.cgi?dd(1)) will often require root permissions to access devices.
 
 ## How to - Download, install, and run
 
@@ -67,13 +67,13 @@ make install
 dds
 ```
 
-Potential errors:
+:heavy_exclamation_mark: Potential errors:
 ```sh
 install: cannot create regular file '/usr/bin/dds': Permission denied
 make: *** [Makefile:7: install] Error 1
 ```
 
-Solution:
+:heavy_check_mark: Solution:
 ```sh
 sudo make install
 ```
