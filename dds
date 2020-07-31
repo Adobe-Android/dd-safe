@@ -40,11 +40,13 @@ validate_file()
 
 check_drive_size()
 {
-  FILE=$1
-  DRIVE_NAME=$(echo "$FILE" | cut -b 6-8)
-  FILE_SIZE=$(lsblk | grep "$DRIVE_NAME" | awk '/disk/ {print $4}')
-  if [ -n "$FILE_SIZE" ]; then
-    echo "Your drive at $1 is $FILE_SIZE"
+  if [ "$(command -v lsblk)" ]; then
+    FILE=$1
+    DRIVE_NAME=$(echo "$FILE" | cut -b 6-8)
+    FILE_SIZE=$(lsblk | grep "$DRIVE_NAME" | awk '/disk/ {print $4}')
+    if [ -n "$FILE_SIZE" ]; then
+      echo "Your drive at $1 is $FILE_SIZE"
+    fi
   fi
 }
 
