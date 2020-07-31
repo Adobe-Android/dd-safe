@@ -19,23 +19,11 @@ Written in [shellcheck](https://www.shellcheck.net) compliant POSIX sh.
 
 I really wanted this to work, but WSL isn't able to enumerate drives as expected.
 ```sh
-lsblk
-```
-
-```sh
 lsblk: failed to access sysfs directory: /sys/dev/block: No such file or directory
 ```
-
-```sh
-fdisk -l
-```
-
 ```sh
 fdisk: cannot open /proc/partitions: No such file or directory
 ```
-
-Commands like lsblk and fdisk -l don't work.
-
 
 ## How to - Download and run (without installation)
 
