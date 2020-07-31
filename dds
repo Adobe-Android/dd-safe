@@ -38,6 +38,12 @@ validate_file()
   fi
 }
 
+check_drive_size()
+{
+  FILE=$1
+  fdisk -l | grep Disk | grep "$FILE"
+}
+
 check_illumos()
 {
   case "$(uname -o)" in
@@ -86,6 +92,7 @@ main()
   printf 'Enter data destination: '
   read -r of
   validate_file "$of"
+  check_drive_size "$of"
   printf 'What block size do you want to use? (default: 64k, 128k, 1M): '
   read -r bs
 
