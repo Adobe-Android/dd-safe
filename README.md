@@ -69,7 +69,7 @@ dds
 
 :heavy_exclamation_mark: Potential errors:
 ```sh
-install: cannot create regular file '/usr/bin/dds': Permission denied
+install: cannot create regular file '/usr/local/bin/dds': Permission denied
 make: *** [Makefile:7: install] Error 1
 ```
 
