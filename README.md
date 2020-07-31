@@ -17,7 +17,9 @@ Written in [shellcheck](https://www.shellcheck.net) compliant POSIX sh.
 ## Unsupported
 * :wine_glass: Windows via WSL (Windows subsystem for Linux)
 
-I really wanted this to work, but WSL isn't able to enumerate drives as expected.
+I really wanted this to work, but WSL isn't even able to enumerate drives with tools like lsblk and fdisk.
+Therefore, officially supporting it would be a mistake.
+
 ```sh
 lsblk: failed to access sysfs directory: /sys/dev/block: No such file or directory
 ```
