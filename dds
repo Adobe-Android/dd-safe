@@ -43,9 +43,16 @@ check_drive_size()
   if [ "$(command -v lsblk)" ]; then
     echo "lsblk detected"
     FILE=$1
-    DRIVE_NAME=${FILE##*/}
-    echo "Your drive name is: $DRIVE_NAME"
-    FILE_SIZE=$(lsblk | grep "$DRIVE_NAME" | awk '/disk/ {print $4}')
+    FILE_NAME=${FILE##*/}
+    echo "Your drive name is: $FILE_NAME"
+
+    case "$(uname -s)" in
+      Linux)
+        # | FreeBSD | DragonFly
+        FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk '/disk/ {print $4}');;
+      FreeBSD)
+        FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk '/disk/ {print $3}')
+
     if [ -n "$FILE_SIZE" ]; then
       echo "Your drive at $1 is $FILE_SIZE"
     fi
