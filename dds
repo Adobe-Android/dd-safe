@@ -44,20 +44,20 @@ check_drive_size()
     FILE=$1
     FILE_NAME=${FILE##*/}
   else
-    echo "lsblk not detected. skipping optional drive size check..."
+    echo "lsblk not detected. skipping optional drive size check."
+  fi
+  
+  case "$(uname -s)" in
+    Linux)
+      # | FreeBSD | DragonFly
+      FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $4}');;
+    FreeBSD)
+      # Row 1, Column 3
+      FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $3}')
+  esac
 
-    case "$(uname -s)" in
-      Linux)
-        # | FreeBSD | DragonFly
-        FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $4}');;
-      FreeBSD)
-        # Row 1, Column 3
-        FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $3}')
-    esac
-
-    if [ -n "$FILE_SIZE" ]; then
-      echo "Your drive at $1 is $FILE_SIZE"
-    fi
+  if [ -n "$FILE_SIZE" ]; then
+    echo "Your drive at $1 is $FILE_SIZE"
   fi
 }
 
