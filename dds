@@ -52,6 +52,7 @@ check_drive_size()
         FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk '/disk/ {print $4}');;
       FreeBSD)
         FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk '/disk/ {print $3}')
+    esac
 
     if [ -n "$FILE_SIZE" ]; then
       echo "Your drive at $1 is $FILE_SIZE"
