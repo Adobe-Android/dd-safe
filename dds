@@ -41,15 +41,15 @@ validate_file()
 check_drive_size()
 {
   if [ "$(command -v lsblk)" ]; then
-    echo "lsblk detected"
     FILE=$1
     FILE_NAME=${FILE##*/}
-    echo "Your drive name is: $FILE_NAME"
+  else
+    echo "lsblk not detected. skipping optional drive size check..."
 
     case "$(uname -s)" in
       Linux)
         # | FreeBSD | DragonFly
-        FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk '/disk/ {print $4}');;
+        FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $4}');;
       FreeBSD)
         # Row 1, Column 3
         FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $3}')
@@ -106,6 +106,7 @@ main()
   printf 'Enter data source: '
   read -r if
   validate_file "$if"
+  check_drive_size "$if"
   printf 'Enter data destination: '
   read -r of
   validate_file "$of"
