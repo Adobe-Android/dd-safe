@@ -51,7 +51,8 @@ check_drive_size()
         # | FreeBSD | DragonFly
         FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk '/disk/ {print $4}');;
       FreeBSD)
-        FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk '/disk/ {print $3}')
+        # Row 1, Column 3
+        FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $3}')
     esac
 
     if [ -n "$FILE_SIZE" ]; then
