@@ -41,8 +41,10 @@ validate_file()
 check_drive_size()
 {
   if [ "$(command -v lsblk)" ]; then
+    echo "lsblk detected"
     FILE=$1
-    DRIVE_NAME=$(echo "$FILE" | cut -b 6-8)
+    DRIVE_NAME=${FILE##*/}
+    echo "Your drive name is: $DRIVE_NAME"
     FILE_SIZE=$(lsblk | grep "$DRIVE_NAME" | awk '/disk/ {print $4}')
     if [ -n "$FILE_SIZE" ]; then
       echo "Your drive at $1 is $FILE_SIZE"
