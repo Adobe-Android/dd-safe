@@ -38,8 +38,9 @@ validate_file()
   fi
 }
 
-check_drive_size()
+check_file_size()
 {
+  # We use file to refer to the Unix definition of the word - Everything is a file.
   if [ "$(command -v lsblk)" ]; then
     FILE=$1
     FILE_NAME=${FILE##*/}
@@ -50,14 +51,30 @@ check_drive_size()
   case "$(uname -s)" in
     Linux)
       # | FreeBSD | DragonFly
-      FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $4}');;
+      FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $4}')
+      FILE_EXT=${FILE##*.}
+      case $FILE_SIZE in
+        "")
+          case $FILE_EXT in
+            "iso" | "img")
+              FILE_SIZE=$(du -h "$FILE_NAME" | awk '{print $1}')
+          esac
+      esac;;
     FreeBSD)
       # Row 1, Column 3
       FILE_SIZE=$(lsblk | grep "$FILE_NAME" | awk 'FNR == 1 {print $3}')
+      FILE_EXT=${FILE##*.}
+      case $FILE_SIZE in
+        "")
+          case $FILE_EXT in
+            "iso" | "img")
+              FILE_SIZE=$(du -h "$FILE_NAME" | awk '{print $1}')
+          esac
+      esac
   esac
 
   if [ -n "$FILE_SIZE" ]; then
-    echo "Your drive at $1 is $FILE_SIZE"
+    echo "Your file at $1 is $FILE_SIZE"
   fi
 }
 
@@ -106,11 +123,11 @@ main()
   printf 'Enter data source: '
   read -r if
   validate_file "$if"
-  check_drive_size "$if"
+  check_file_size "$if"
   printf 'Enter data destination: '
   read -r of
   validate_file "$of"
-  check_drive_size "$of"
+  check_file_size "$of"
   printf 'What block size do you want to use? (default: 64k, 128k, 1M): '
   read -r bs
 
