@@ -10,8 +10,6 @@ Written in [shellcheck](https://www.shellcheck.net) compliant POSIX sh.
 * :blowfish: OpenBSD
 * :triangular_flag_on_post: NetBSD
 * :sunny: Solaris/illumos
-
-## Coming soon...
 * :apple: macOS
 
 ## Unsupported
