@@ -22,8 +22,8 @@ SEE ALSO
        dd(1)
 
 BUGS
-       Please submit all  issues  here:  https://github.com/Adobe-An‐
-       droid/dd-safe/issues/new
+       Please submit all  issues  here: 
+       https://github.com/Adobe-Android/dd-safe/issues/new
 
 AUTHOR
        David Brown - https://github.com/Adobe-Android
