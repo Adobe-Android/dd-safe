@@ -1,0 +1,39 @@
+# NAME
+
+dds - A safer and simpler way to use dd
+
+# SYNOPSIS
+
+dds
+
+# DESCRIPTION
+
+dds is a high-level posix shell wrapper around dd. It focuses on serving
+the most common use cases with simplicity, safety, and portability in
+mind.
+
+# OPTIONS
+
+dds does not take any options. However, --help and --version work as
+expected.
+
+# LICENSE
+
+MIT License - *https://choosealicense.com/licenses/mit/*
+
+# SEE ALSO
+
+dd(1)
+
+# BUGS
+
+Please submit all issues here:
+*https://github.com/Adobe-Android/dd-safe/issues/new*
+
+# AUTHOR
+
+David Brown - *https://github.com/Adobe-Android*
+
+# HOME
+
+*https://github.com/Adobe-Android/dd-safe*
