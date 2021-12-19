@@ -18,7 +18,7 @@ get_help()
 
 get_version()
 {
-  version="dds version 1.0"
+  version="dds version 1.1"
 }
 
 check_if_su()
@@ -86,12 +86,12 @@ unmount_disks()
   case "$os_type" in
     Darwin)
       if [ "$(command -v diskutil)" ]; then
-        diskutil unmountDisk $1
+        diskutil unmountDisk "$1"
       else
         echo "Your OS was detected to be ${os_type}, but the diskutil command could not be found."
       fi;;
     Linux)
-      unmount $1;;
+      unmount "$1";;
     *)
       echo "Functionality not implemented for your OS: ${os_type}"
   esac
@@ -120,10 +120,20 @@ main()
   list_disks
   echo "------------------"
   printf 'Enter data source: '
-  read -r src
+  if [ "$(command -v read -e)" ]; then
+    echo "supports -e flag"
+    read -e -r src
+  else
+    read -r src
+  fi
   validate_file "$src"
   printf 'Enter data destination: '
-  read -r dest
+  if [ "$(command -v read -e)" ]; then
+    echo "supports -e flag"
+    read -e -r dest
+  else
+    read -r dest
+  fi
   validate_file "$dest"
   unmount_disks "$dest"
   printf 'What block size do you want to use? (default: 64k, 128k, 1m): '
