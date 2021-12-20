@@ -53,7 +53,15 @@ check_illumos()
 check_os()
 {
   os_type="$(uname -s)"
+  bash_compat=0
   echo "OS: $os_type"
+  if [ -z "$(type -p)" ]; then
+    echo "bash compatible"
+    bash_compat=1
+  else
+    echo "not bash compatible"
+    bash_compat=0
+  fi
   case "$os_type" in
     # Platforms known to support the status progress indicator
     Linux | FreeBSD | DragonFly)
@@ -104,6 +112,7 @@ run_dd()
     "true")
       dd if="$src" of="$dest" bs="$bs" conv=noerror,sync status=progress;;
     "false")
+      echo "Press Ctrl + t at any time to check progress"
       dd if="$src" of="$dest" bs="$bs" conv=noerror,sync;;
     *)
       echo "Well... this is no good. Feel free to open an issue here: https://github.com/Adobe-Android/dd-safe/issues/new"
@@ -120,20 +129,20 @@ main()
   list_disks
   echo "------------------"
   printf 'Enter data source: '
-  if [ "$(command -v read -e)" ]; then
-    echo "supports -e flag"
-    read -e -r src
-  else
-    read -r src
-  fi
+  case $bash_compat in
+    1)
+      read -e -r src;;
+    *)
+      read -r src;;
+  esac
   validate_file "$src"
   printf 'Enter data destination: '
-  if [ "$(command -v read -e)" ]; then
-    echo "supports -e flag"
-    read -e -r dest
-  else
-    read -r dest
-  fi
+  case $bash_compat in
+    1)
+      read -e -r dest;;
+    *)
+      read -r dest;;
+  esac
   validate_file "$dest"
   unmount_disks "$dest"
   printf 'What block size do you want to use? (default: 64k, 128k, 1m): '
