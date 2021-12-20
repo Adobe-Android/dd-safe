@@ -99,7 +99,7 @@ unmount_disks()
         echo "Your OS was detected to be ${os_type}, but the diskutil command could not be found."
       fi;;
     Linux)
-      unmount "$1";;
+      umount "$1";;
     *)
       echo "Functionality not implemented for your OS: ${os_type}"
   esac
