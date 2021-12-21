@@ -55,7 +55,7 @@ check_os()
   os_type="$(uname -s)"
   bash_compat=0
   echo "OS: $os_type"
-  if [ "$os_type" = "NetBSD" ]; then
+  if [ "$os_type" = "NetBSD" | "$os_type" = "FreeBSD" ]; then
     # echo "not bash compatible"
     bash_compat=0
   elif [ -z "$(type -p)" ]; then
@@ -92,6 +92,12 @@ list_disks()
         lsblk
       else
         echo "Your OS was detected to be ${os_type}, but the lsblk command could not be found."
+      fi;;
+    FreeBSD)
+      if [ "$(command -v geom)" ]; then
+        geom disk list
+      else
+        echo "Your OS was detected to be ${os_type}, but the geom command could not be found."
       fi;;
     *)
       echo "The disk list functionality is not implemented for your OS: ${os_type}"
