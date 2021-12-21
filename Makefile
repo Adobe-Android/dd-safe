@@ -6,7 +6,9 @@ all:
 	@echo RUN \'make install\' to install dds
 
 install:
+	@mkdir -p $(PREFIX)/bin
 	@install -m755 $(BIN) $(DESTDIR)$(PREFIX)/bin/$(BIN)
+	@mkdir -p $(MANPREFIX)/man1
 	@install -m644 $(BIN).1 $(DESTDIR)$(MANPREFIX)/man1
 
 uninstall:
