@@ -115,8 +115,6 @@ list_disks()
       else
         echo "Your OS was detected to be ${os_type}, but the geom command could not be found."
       fi;;
-    *)
-      echo "The disk list functionality is not implemented for your OS: ${os_type}"
   esac
 }
 
@@ -131,8 +129,6 @@ unmount_disks()
       fi;;
     Linux)
       umount "$1";;
-    *)
-      echo "The automatic unmount functionality is not implemented for your OS: ${os_type}"
   esac
 }
 
