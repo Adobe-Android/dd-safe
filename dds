@@ -55,7 +55,10 @@ check_os()
   os_type="$(uname -s)"
   bash_compat=0
   echo "OS: $os_type"
-  if [ -z "$(type -p)" && os_type != "NetBSD" ]; then
+  if [ "$os_type" = "NetBSD" ]; then
+    # echo "not bash compatible"
+    bash_compat=0
+  elif [ -z "$(type -p)" ]; then
     # echo "bash compatible"
     bash_compat=1
   else
