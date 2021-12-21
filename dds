@@ -24,7 +24,7 @@ get_version()
 check_if_su()
 {
   if [ "$(id -u)" != 0 ]; then
-    echo "Please run with su privileges"
+    echo "Please run with super user privileges"
     fancy_exit
   fi
 }
@@ -36,6 +36,24 @@ validate_file()
     echo "Not a valid file"
     fancy_exit
   fi
+}
+
+check_shell()
+{
+  # https://stackoverflow.com/questions/23011370/how-to-recognize-whether-bash-or-dash-is-being-used-within-a-script
+  local trueExe nextTarget 2>/dev/null # ignore error in shells without `local`
+  # Determine the shell executable filename.
+  trueExe=$(ps -o comm= $$) || return 1
+  # Strip a leading "-", as added e.g. by OSX for login shells.
+  [ "${trueExe#-}" = "$trueExe" ] || trueExe=${trueExe#-}
+  # Determine full executable path.
+  [ "${trueExe#/}" != "$trueExe" ] || trueExe=$([ -n "$ZSH_VERSION" ] && which -p "$trueExe" || which "$trueExe")
+  # If the executable is a symlink, resolve it to its *ultimate*
+  # target. 
+  while nextTarget=$(readlink "$trueExe"); do trueExe=$nextTarget; done
+  # Output the executable name only.
+  # printf '%s\n' "$(basename "$trueExe")"
+  shell_type="$(basename "$trueExe")"
 }
 
 check_illumos()
@@ -53,21 +71,24 @@ check_illumos()
 check_os()
 {
   os_type="$(uname -s)"
-  bash_compat=0
   echo "OS: $os_type"
-  if [ -z "$(type -p)" ]; then
-    echo "bash compatible"
-    bash_compat=1
-  else
-    echo "not bash compatible"
-    bash_compat=0
-  fi
+  echo "SHELL: $shell_type"
+
+  case "$shell_type" in
+    bash)
+      bash_compat=1;;
+    *)
+      bash_compat=0
+  esac
+
   case "$os_type" in
     # Platforms known to support the status progress indicator
     Linux | FreeBSD | DragonFly)
       status_supported="true";;
     SunOS)
       check_illumos;;
+    NetBSD)
+      status_supported="other";;
     *)
       status_supported="false"
   esac
@@ -83,9 +104,19 @@ list_disks()
         echo "Your OS was detected to be ${os_type}, but the diskutil command could not be found."
       fi;;
     Linux)
-      lsblk;;
+      if [ "$(command -v lsblk)" ]; then
+        lsblk
+      else
+        echo "Your OS was detected to be ${os_type}, but the lsblk command could not be found."
+      fi;;
+    FreeBSD)
+      if [ "$(command -v geom)" ]; then
+        geom disk list
+      else
+        echo "Your OS was detected to be ${os_type}, but the geom command could not be found."
+      fi;;
     *)
-      echo "Functionality not implemented for your OS: ${os_type}"
+      echo "The disk list functionality is not implemented for your OS: ${os_type}"
   esac
 }
 
@@ -101,7 +132,7 @@ unmount_disks()
     Linux)
       umount "$1";;
     *)
-      echo "Functionality not implemented for your OS: ${os_type}"
+      echo "The automatic unmount functionality is not implemented for your OS: ${os_type}"
   esac
 }
 
@@ -114,6 +145,8 @@ run_dd()
     "false")
       echo "Press Ctrl + t at any time to check progress"
       dd if="$src" of="$dest" bs="$bs" conv=noerror,sync;;
+    "other")
+      dd if="$src" of="$dest" bs="$bs" conv=noerror,sync progress=1;;
     *)
       echo "Well... this is no good. Feel free to open an issue here: https://github.com/Adobe-Android/dd-safe/issues/new"
   esac
@@ -124,6 +157,7 @@ main()
   echo "Welcome to dd-safe"
   echo "------------------"
   check_if_su
+  check_shell
   check_os
   echo "------------------"
   list_disks
@@ -145,13 +179,29 @@ main()
   esac
   validate_file "$dest"
   unmount_disks "$dest"
-  printf 'What block size do you want to use? (default: 64k, 128k, 1m): '
+  printf 'What block size do you want to use? (default: 4096 bytes): '
   read -r bs_in
 
   case $bs_in in
     "" | " ")
-      bs="64k"
-      echo "No value provided. Setting default value: $bs";;
+     # BSD and Linux systems use different shorthand for M, m and G, g.
+
+     # Excerpt from FreeBSD 13.0-RELEASE man page. - https://www.freebsd.org/cgi/man.cgi?query=dd&apropos=0&sektion=1&manpath=FreeBSD+13.0-RELEASE&arch=default&format=html
+     # Where sizes or speed are specified, a decimal, octal, or hexadecimal num-
+     # ber of bytes is expected.	If the number ends with	a "b", "k", "m", "g",
+     # "t", "p", or "w", the number is multiplied	by 512,	1024 (1K), 1048576
+     # (1M), 1073741824 (1G), 1099511627776 (1T),	1125899906842624 (1P) or the
+     # number of bytes in	an integer, respectively.  Two or more numbers may be
+     # separated by an "x" to indicate a product.
+
+      # Excerpt from Debian 11 (Bullseye) man page. - https://manpages.debian.org/bullseye/coreutils/dd.1.en.html
+      # N and BYTES may be followed by the following multiplicative 
+      # suffixes: c=1, w=2, b=512, kB=1000, K=1024, MB=1000*1000, M=1024*1024, xM=M, 
+      # GB=1000*1000*1000, G=1024*1024*1024, and so on for T, P, E, Z, Y. 
+      # Binary prefixes can be used, too: KiB=K, MiB=M, and so on.
+
+      bs="4096"
+      echo "No value provided. Using default value of $bs bytes";;
     *)
       bs=$bs_in;;
   esac
